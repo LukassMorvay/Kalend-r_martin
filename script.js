@@ -1371,19 +1371,54 @@ addHolidayBtn.addEventListener('click', () => {
   holidayModal.classList.remove('hidden');
 });
 
-// holidayForm.addEventListener('submit', async function (e) {
-//   e.preventDefault();
+holidayForm.addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-//   const holiday = {
-//     mechanik: '', // Zachované pre spätnú kompatibilitu
-//     otherEmployee: '', // Zachované pre spätnú kompatibilitu
-//     holidayEmployee: holidayForm.holidayEmployee.value,
-//     from: holidayForm.holidayFrom.value,
-//     to: holidayForm.holidayTo.value,
-//     type: holidayForm.holidayType.value,
-//     notes: holidayNotesText.value
-//   };
+  const holiday = {
+    mechanik: '', // Zachované pre spätnú kompatibilitu
+    otherEmployee: '', // Zachované pre spätnú kompatibilitu
+    holidayEmployee: holidayForm.holidayEmployee.value,
+    from: holidayForm.holidayFrom.value,
+    to: holidayForm.holidayTo.value,
+    type: holidayForm.holidayType.value,
+    notes: holidayNotesText.value
+  };
 
-//   const fromDate = new Date(holiday.from);
-//   const toDate = new Date(holiday.to);
-//   if (fromDate > to
+  const fromDate = new Date(holiday.from);
+  const toDate = new Date(holiday.to);
+  if (fromDate > toDate) {
+    alert('Dátum konca musí byť po dátume začiatku.');
+    return;
+  }
+
+  try {
+    const editIndex = holidayEditIndex.value;
+    if (editIndex !== '-1') {
+      // Edit existing holiday
+      const holidayToUpdate = { ...holiday, _id: editIndex };
+      await deleteHoliday(editIndex); // Delete old one
+      await saveHoliday(holidayToUpdate); // Save new one
+    } else {
+      // Add new holiday
+      await saveHoliday(holiday);
+    }
+
+    holidayModal.classList.add('hidden');
+    holidayForm.reset();
+    await renderHolidayNotes(currentDate);
+    await renderCalendar(currentDate);
+  } catch (error) {
+    alert('Chyba pri ukladaní dovolenky. Skúste to znova.');
+    console.error('Error saving holiday:', error);
+  }
+});
+
+cancelHolidayBtn.addEventListener('click', () => {
+  holidayModal.classList.add('hidden');
+});
+
+// Initialize the calendar
+(async function() {
+  await renderCalendar(currentDate);
+  await renderHolidayNotes(currentDate);
+})();
