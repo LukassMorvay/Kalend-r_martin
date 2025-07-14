@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalendár Autoglas</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <img src="chat1.jpg.png" alt="Autoglas Banner">
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <button id="prevMonth">‹</button>
+            <span id="monthYear"></span>
+            <button id="nextMonth">›</button>
+        </div>
+
+        <div id="viewControls">
+            <button data-view="day">Deň</button>
+            <button data-view="week">Týždeň</button>
+            <button data-view="month" class="active">Mesiac</button>
+        </div>
+
+        <div id="dayPicker" class="hidden"></div>
+
+        <div id="holidayNotes" class="holiday-notes">
+            <h3>Dovolenky/Poznámky</h3>
+            <div id="holidayList"></div>
+            <button id="addHoliday">Pridať dovolenku/poznámku</button>
+        </div>
+
+        <div id="calendar"></div>
+
+        <div id="taskModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Úlohy pre <span id="modalDateDisplay"></span></h3>
+                <form id="taskForm">
+                    <input type="hidden" id="selectedDate" name="selectedDate">
+                    <input type="hidden" id="editIndex" name="editIndex" value="-1">
+
+                    <label for="popis">Popis práce:</label>
+                    <select id="popis" name="popis" required>
+                        <option value="" disabled selected>Vyber</option>
+                        <option value="Oprava skla">Oprava skla</option>
+                        <option value="Výmena skla">Výmena skla</option>
+                        <option value="Ťažné zariadenie">Ťažné zariadenie</option>
+                        <option value="Žiarovky">Žiarovky</option>
+                        <option value="Ostatné">Ostatné</option>
+                    </select>
+
+                    <label for="customPopis" id="customPopisLabel" style="display: none;">Zadajte popis:</label>
+                    <input type="text" id="customPopis" name="customPopis" style="display: none;">
+
+                    <label for="znacka">Značka auta:</label>
+                    <input type="text" id="znacka" name="znacka" required>
+
+                    <label for="poistovna">Poisťovňa:</label>
+                    <select id="poistovna" name="poistovna" required>
+                        <option value="" disabled selected>Vyber</option>
+                        <option value="Allianz">Allianz</option>
+                        <option value="ČSOB">ČSOB</option>
+                        <option value="Generali">Generali</option>
+                        <option value="Groupama">Groupama</option>
+                        <option value="Uniqa">Uniqa</option>
+                        <option value="Kooperativa">Kooperativa</option>
+                        <option value="Komunálna">Komunálna</option>
+                        <option value="Wüstenrot">Wüstenrot</option>
+                        <option value="Union">Union</option>
+                        <option value="Bez poisťovne">Bez poisťovne</option>
+                    </select>
+
+                    <label for="startTime">Začiatok (čas):</label>
+                    <select id="startTime" name="startTime" required>
+                        <option value="" disabled selected>Vyber</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="prenocovanie">Prenocovanie</option>
+                    </select>
+
+                    <label for="endTime">Koniec (čas):</label>
+                    <select id="endTime" name="endTime">
+                        <option value="" disabled selected>Vyber</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                    </select>
+
+                    <label for="meno">Meno zákazníka:</label>
+                    <input type="text" id="meno" name="meno" required>
+
+                    <label for="telefon">Telefónne číslo zákazníka:</label>
+                    <input type="tel" id="telefon" name="telefon" required>
+
+                    <label for="mechanik">Mechanik:</label>
+                    <select id="mechanik" name="mechanik">
+                        <option value="" selected>Nezadaný</option>
+                        <option value="Peter Kulich">Peter Kulich</option>
+                        <option value="Róbert Krutek">Róbert Krutek</option>
+                        <option value="Tomáš Hrašna">Tomáš Hrašna</option>
+                    </select>
+
+                    <label for="extraInfo">Ďalšie informácie (nepovinné):</label>
+                    <textarea id="extraInfo" name="extraInfo"></textarea>
+
+                    <div class="modal-buttons">
+                        <button type="submit">Uložiť</button>
+                        <button type="button" id="cancelModal">Zavrieť</button>
+                    </div>
+                </form>
+
+                <div id="taskList"></div>
+            </div>
+        </div>
+
+        <div id="detailsModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Detail objednávky</h3>
+                <div id="detailsContent"></div>
+                <label class="call-checkbox-label">
+                    <input type="checkbox" id="callStatus"> 📞 Zavolané
+                </label>
+                <div class="modal-buttons">
+                    <button id="editDetails">Upraviť</button>
+                    <button id="closeDetails">Zavrieť</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="holidayModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Pridať/Upraviť dovolenku/poznámku</h3>
+                <form id="holidayForm">
+                    <input type="hidden" id="holidayEditIndex" name="holidayEditIndex" value="-1">
+
+                    <label for="holidayEmployee">Zamestnanec:</label>
+                    <select id="holidayEmployee" name="holidayEmployee" required>
+                        <option value="" disabled selected>Vyber</option>
+                        <option value="Peter Kulich">Peter Kulich</option>
+                        <option value="Róbert Krutek">Róbert Krutek</option>
+                        <option value="Tomáš Hrašna">Tomáš Hrašna</option>
+                        <option value="Patrik Krutek">Patrik Krutek</option>
+                        <option value="Michal Murín">Michal Murín</option>
+                        <option value="Martin Morvay">Martin Morvay</option>
+                        <option value="Vlasto Morvay">Vlasto Morvay</option>
+                        <option value="Milan Morvay">Milan Morvay</option>
+                    </select>
+
+                    <label for="holidayFrom">Dátum od:</label>
+                    <input type="date" id="holidayFrom" name="holidayFrom" required>
+
+                    <label for="holidayTo">Dátum do:</label>
+                    <input type="date" id="holidayTo" name="holidayTo" required>
+
+                    <label for="holidayType">Typ:</label>
+                    <select id="holidayType" name="holidayType" required>
+                        <option value="" disabled selected>Vyber</option>
+                        <option value="Dovolenka">Dovolenka</option>
+                        <option value="PN">PN</option>
+                        <option value="OčR">OčR</option>
+                        <option value="Doktor">Doktor</option>
+                        <option value="Iné">Iné</option>
+                    </select>
+
+                    <label for="holidayNotesText">Poznámky:</label>
+                    <textarea id="holidayNotesText" name="holidayNotesText"></textarea>
+
+                    <div class="modal-buttons">
+                        <button type="submit">Uložiť</button>
+                        <button type="button" id="cancelHoliday">Zavrieť</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+</body>
+</html>
